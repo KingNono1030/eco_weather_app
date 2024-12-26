@@ -19,7 +19,7 @@ export async function GET(req: NextRequest) {
 
   try {
     const data = await weatherKy
-      .get('', {
+      .get('weather', {
         searchParams: {
           lat,
           lon,

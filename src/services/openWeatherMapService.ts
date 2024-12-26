@@ -6,7 +6,23 @@ export const getCurrentWeatherData = async ({
   longitude,
 }: GeolocationCoordinates) => {
   const response = await apiRouteKy
-    .get(`api/weatherMap`, {
+    .get(`api/currentWeather`, {
+      searchParams: {
+        lat: latitude,
+        lon: longitude,
+      },
+    })
+    .json()
+
+  return response
+}
+
+export const getForecastWeatherData = async ({
+  latitude,
+  longitude,
+}: GeolocationCoordinates) => {
+  const response = await apiRouteKy
+    .get(`api/forecastWeather`, {
       searchParams: {
         lat: latitude,
         lon: longitude,
