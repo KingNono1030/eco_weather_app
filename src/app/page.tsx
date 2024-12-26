@@ -12,6 +12,7 @@ import { locationArray } from '@/constants/location'
 import { useState } from 'react'
 import WeatherLineChart from '@/components/weather/WeatherTabs'
 import CurrentWeatherCard from '@/components/weather/CurrentWeatherCard'
+import Favorites from '@/components/favorite'
 
 export default function Home() {
   const [value, setValue] = useState<string | null>(null)
@@ -29,6 +30,10 @@ export default function Home() {
         />
         <button className='text-yellow-500 font-bold'>★ 즐겨찾기</button>
       </header>
+
+      <section className='bg-white p-4 mt-4 rounded shadow flex'>
+        <Favorites />
+      </section>
 
       <section className='bg-white p-4 mt-4 rounded shadow'>
         <Button
@@ -66,22 +71,6 @@ export default function Home() {
         <div className='flex space-x-4 mt-2'>
           <WeatherLineChart />
         </div>
-      </section>
-
-      <section className='bg-white p-4 mt-4 rounded shadow'>
-        <h2 className='text-lg font-semibold'>검색 결과</h2>
-        <ul>
-          <li>서울</li>
-          <li>부산</li>
-        </ul>
-      </section>
-
-      <section className='bg-white p-4 mt-4 rounded shadow'>
-        <h2 className='text-lg font-semibold'>즐겨찾기</h2>
-        <ul>
-          <li>제주도</li>
-          <li>대전</li>
-        </ul>
       </section>
     </div>
   )
