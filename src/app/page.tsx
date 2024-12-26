@@ -18,13 +18,16 @@ import { useEffect, useState } from 'react'
 import WeatherLineChart from '@/components/weather/WeatherTabs'
 import CurrentWeatherCard from '@/components/weather/CurrentWeatherCard'
 import Favorites from '@/components/favorite'
-import { CurrentWeatherData } from '@/types/Weather.types'
+import { CurrentWeatherData, ForecastWeatherData } from '@/types/Weather.types'
 
 export default function Home() {
   const [searchValue, setSearchValue] = useState<string | null>(DEFAULT_CITY)
   const coordinates = locationCoordinatesMap[searchValue as City]
   const [currentWeatherData, setCurrentWeatherData] =
     useState<CurrentWeatherData | null>(null)
+  const [forcaseWeatherData, setForecastWeatherData] = useState<
+    ForecastWeatherData[]
+  >([])
   const [favorites, setFavorites] = useState<string[]>([])
 
   useEffect(() => {
@@ -33,13 +36,28 @@ export default function Home() {
         if (!coordinates) return
         const weather: CurrentWeatherData =
           await getCurrentWeatherData(coordinates)
-        console.log(weather)
+
         setCurrentWeatherData(weather)
       } catch (error) {
         throw error
       }
     }
     fetchCurrentWeatherData()
+  }, [coordinates])
+
+  useEffect(() => {
+    const fetchForecastWeatherData = async () => {
+      try {
+        if (!coordinates) return
+        const weathers: ForecastWeatherData[] =
+          await getForecastWeatherData(coordinates)
+        console.log(weathers)
+        setForecastWeatherData(weathers)
+      } catch (error) {
+        throw error
+      }
+    }
+    fetchForecastWeatherData()
   }, [coordinates])
 
   return (
@@ -100,15 +118,17 @@ export default function Home() {
         </Button>
       </section>
       <section className='bg-white p-4 mt-4 rounded shadow'>
-        <h2 className='text-lg font-semibold text-gray-600'>🌍 현재 날씨</h2>
+        <h2 className='text-lg font-semibold text-gray-600'>
+          {`🌍 현재 날씨 (${searchValue})`}
+        </h2>
         {currentWeatherData && <CurrentWeatherCard data={currentWeatherData} />}
       </section>
       <section className='bg-white p-4 mt-4 rounded shadow'>
         <h2 className='text-lg font-semibold text-gray-600'>
-          ⏰ 시간대별 날씨
+          {`⏰ 시간대별 날씨 (${searchValue})`}
         </h2>
         <div className='flex space-x-4 mt-2'>
-          <WeatherLineChart />
+          <WeatherLineChart data={forcaseWeatherData.slice(0, 8)} />
         </div>
       </section>
     </div>

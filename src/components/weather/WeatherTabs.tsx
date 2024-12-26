@@ -3,23 +3,18 @@
 import React, { useState } from 'react'
 import { Box, Tabs, Tab } from '@mui/material'
 import { LineChart } from '@mui/x-charts'
-
+import { ForecastWeatherData } from '@/types/Weather.types'
+import { getProcessedWeatherData } from '@/lib/utils'
 type TabIndex = 0 | 1 | 2
 
-const WeatherTabs = () => {
+const WeatherTabs = ({ data }: { data: ForecastWeatherData[] }) => {
   const [activeTab, setActiveTab] = useState<TabIndex>(0)
 
   const handleTabChange = (_: React.SyntheticEvent, newValue: TabIndex) => {
     setActiveTab(newValue)
   }
 
-  const data = [
-    { time: '3AM', temperature: 1.9, feels_like: -2.9, windSpeed: 5.89 },
-    { time: '6AM', temperature: 0.4, feels_like: -4.2, windSpeed: 6.12 },
-    { time: '9AM', temperature: -1.0, feels_like: -5.6, windSpeed: 6.89 },
-    { time: '12PM', temperature: 2.5, feels_like: -0.5, windSpeed: 4.78 },
-    { time: '3PM', temperature: 4.0, feels_like: 1.2, windSpeed: 3.56 },
-  ]
+  const processedData = getProcessedWeatherData(data)
 
   const chartData: Record<TabIndex, Record<string, string>> = {
     0: { dataKey: 'temperature', label: '현재 기온 (°C)', color: '#ff5722' },
@@ -46,7 +41,7 @@ const WeatherTabs = () => {
         <LineChart
           width={1200}
           height={400}
-          dataset={data}
+          dataset={processedData}
           xAxis={[
             {
               dataKey: 'time',
