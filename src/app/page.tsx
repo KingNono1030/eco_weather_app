@@ -11,6 +11,7 @@ import { Button } from '@mui/material'
 import { locationArray } from '@/constants/location'
 import { useState } from 'react'
 import WeatherLineChart from '@/components/weather/WeatherTabs'
+import CurrentWeatherCard from '@/components/weather/CurrentWeatherCard'
 
 export default function Home() {
   const [value, setValue] = useState<string | null>(null)
@@ -52,6 +53,7 @@ export default function Home() {
         >
           버튼2
         </Button>
+        <CurrentWeatherCard />
         <h2 className='text-lg font-semibold'>🌍 현재 위치: 서울 (12:00 PM)</h2>
         <div className='flex items-center mt-2'>
           <span className='text-4xl'>☀️</span>
