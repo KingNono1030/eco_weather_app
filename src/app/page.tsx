@@ -5,12 +5,14 @@ import {
   getCurrentWeatherData,
   getForecastWeatherData,
 } from '@/services/openWeatherMapService'
+import { Button } from '@mui/material'
 
 export default function Home() {
   return (
-    <div className='grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]'>
+    <div className='grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)] bg-white'>
       <div>
-        <button
+        <Button
+          variant='contained'
           onClick={async () => {
             const response = await getGeoLocation()
             console.log(response)
@@ -19,8 +21,9 @@ export default function Home() {
           }}
         >
           버튼1
-        </button>
-        <button
+        </Button>
+        <Button
+          variant='contained'
           onClick={async () => {
             const response = await getGeoLocation()
             console.log(response)
@@ -29,7 +32,7 @@ export default function Home() {
           }}
         >
           버튼2
-        </button>
+        </Button>
       </div>
     </div>
   )
