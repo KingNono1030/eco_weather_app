@@ -1,15 +1,15 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Box, Tabs, Tab, Typography } from '@mui/material'
+import { Box, Tabs, Tab } from '@mui/material'
 import { LineChart } from '@mui/x-charts'
 
 type TabIndex = 0 | 1 | 2
 
 const WeatherTabs = () => {
-  const [activeTab, setActiveTab] = useState<TabIndex>(0) // 현재 활성화된 탭 인덱스
+  const [activeTab, setActiveTab] = useState<TabIndex>(0)
 
-  const handleTabChange = (event, newValue: TabIndex) => {
+  const handleTabChange = (_: React.SyntheticEvent, newValue: TabIndex) => {
     setActiveTab(newValue)
   }
 
@@ -43,9 +43,6 @@ const WeatherTabs = () => {
           flexDirection: 'column',
         }}
       >
-        <Typography variant='h6' align='center' gutterBottom>
-          {chartData[activeTab].label}
-        </Typography>
         <LineChart
           width={1200}
           height={400}
@@ -53,13 +50,13 @@ const WeatherTabs = () => {
           xAxis={[
             {
               dataKey: 'time',
-              label: 'Time',
+              label: '시간',
               scaleType: 'band',
             },
           ]}
           series={[
             {
-              dataKey: chartData[activeTab].dataKey, // 현재 선택된 탭의 데이터
+              dataKey: chartData[activeTab].dataKey,
               label: chartData[activeTab].label,
               color: chartData[activeTab].color,
             },
