@@ -1,7 +1,10 @@
 'use client'
 
 import { getGeoLocation } from '@/services/geoLocationService'
-import { getCurrentWeatherData } from '@/services/openWeatherMapService'
+import {
+  getCurrentWeatherData,
+  getForecastWeatherData,
+} from '@/services/openWeatherMapService'
 
 export default function Home() {
   return (
@@ -15,7 +18,17 @@ export default function Home() {
             console.log(weather)
           }}
         >
-          버튼
+          버튼1
+        </button>
+        <button
+          onClick={async () => {
+            const response = await getGeoLocation()
+            console.log(response)
+            const weather = await getForecastWeatherData(response)
+            console.log(weather)
+          }}
+        >
+          버튼2
         </button>
       </div>
     </div>
