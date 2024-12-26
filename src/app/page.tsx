@@ -22,13 +22,31 @@ import { CurrentWeatherData, ForecastWeatherData } from '@/types/Weather.types'
 
 export default function Home() {
   const [searchValue, setSearchValue] = useState<string | null>(DEFAULT_CITY)
-  const coordinates = locationCoordinatesMap[searchValue as City]
+  const [location, setLocation] = useState<string | null>(DEFAULT_CITY)
+
+  const coordinates = locationCoordinatesMap[location as City]
   const [currentWeatherData, setCurrentWeatherData] =
     useState<CurrentWeatherData | null>(null)
   const [forcaseWeatherData, setForecastWeatherData] = useState<
     ForecastWeatherData[]
   >([])
-  const [favorites, setFavorites] = useState<string[]>([])
+  const [favorites, setFavorites] = useState<(string | null)[]>([])
+
+  const addFavorite = (newFavorite: string | null) => {
+    setFavorites((prev) => {
+      const updatedFavorites = [...new Set([...prev, newFavorite])]
+      localStorage.setItem('favorites', JSON.stringify(updatedFavorites))
+      return updatedFavorites
+    })
+  }
+
+  const deleteFavorite = (favoriteToRemove: string | null) => {
+    setFavorites((prev) => {
+      const updatedFavorites = prev.filter((item) => item !== favoriteToRemove)
+      localStorage.setItem('favorites', JSON.stringify(updatedFavorites))
+      return updatedFavorites
+    })
+  }
 
   useEffect(() => {
     const fetchCurrentWeatherData = async () => {
@@ -60,6 +78,13 @@ export default function Home() {
     fetchForecastWeatherData()
   }, [coordinates])
 
+  useEffect(() => {
+    const storedFavorites = localStorage.getItem('favorites')
+    if (storedFavorites) {
+      setFavorites(JSON.parse(storedFavorites))
+    }
+  }, [])
+
   return (
     <div className='bg-gray-100 min-h-screen p-4'>
       <header className='flex justify-between items-center bg-white p-4 rounded shadow'>
@@ -77,7 +102,7 @@ export default function Home() {
           <Button
             variant='outlined'
             onClick={() => {
-              console.log(searchValue)
+              setLocation(searchValue)
             }}
           >
             검색
@@ -85,50 +110,37 @@ export default function Home() {
         </div>
         <button
           onClick={() => {
-            console.log(searchValue)
+            addFavorite(location)
           }}
           className='text-yellow-500 font-bold'
         >
           ★ 즐겨찾기
         </button>
       </header>
-      <section className='bg-white p-4 mt-4 rounded shadow flex'>
-        <Favorites />
-        <Button
-          variant='contained'
-          onClick={async () => {
-            const response = await getGeoLocation()
-            console.log(response)
-            const weather = await getCurrentWeatherData(response)
-            console.log(weather)
-          }}
-        >
-          버튼1
-        </Button>
-        <Button
-          variant='contained'
-          onClick={async () => {
-            const response = await getGeoLocation()
-            console.log(response)
-            const weather = await getForecastWeatherData(response)
-            console.log(weather)
-          }}
-        >
-          버튼2
-        </Button>
+      <section className='bg-white p-4 mt-4 rounded shadow'>
+        <h2 className='text-lg font-semibold text-gray-600 mb-2'>
+          {'⭐ 즐겨찾기'}
+        </h2>
+        <Favorites
+          favorites={favorites}
+          onFavoriteChange={deleteFavorite}
+          onLocationChange={setLocation}
+        />
       </section>
       <section className='bg-white p-4 mt-4 rounded shadow'>
         <h2 className='text-lg font-semibold text-gray-600'>
-          {`🌍 현재 날씨 (${searchValue})`}
+          {`🌍 현재 날씨 (${location})`}
         </h2>
         {currentWeatherData && <CurrentWeatherCard data={currentWeatherData} />}
       </section>
       <section className='bg-white p-4 mt-4 rounded shadow'>
         <h2 className='text-lg font-semibold text-gray-600'>
-          {`⏰ 시간대별 날씨 (${searchValue})`}
+          {`⏰ 시간대별 날씨 (${location})`}
         </h2>
         <div className='flex space-x-4 mt-2'>
-          <WeatherLineChart data={forcaseWeatherData.slice(0, 8)} />
+          {forcaseWeatherData.length && (
+            <WeatherLineChart data={forcaseWeatherData.slice(0, 8)} />
+          )}
         </div>
       </section>
     </div>

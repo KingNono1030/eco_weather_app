@@ -1,23 +1,32 @@
-import { Card, CardContent, Typography, Chip, Box } from '@mui/material'
+import { Card, CardContent, Chip, Box } from '@mui/material'
+import { Dispatch, SetStateAction } from 'react'
 import { AiFillStar, AiFillDelete } from 'react-icons/ai'
 
-const Favorites = () => {
-  const favorites = ['제주도', '대전', '강릉']
-
+const Favorites = ({
+  favorites,
+  onFavoriteChange,
+  onLocationChange,
+}: {
+  favorites: (string | null)[]
+  onFavoriteChange: (favoriteToRemove: string | null) => void
+  onLocationChange: Dispatch<SetStateAction<string | null>>
+}) => {
   return (
     <Card sx={{ maxWidth: 1200, m: 'auto', borderRadius: 2, boxShadow: 3 }}>
       <CardContent>
-        <Typography variant='h6' gutterBottom>
-          즐겨찾기
-        </Typography>
         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-          {favorites.map((favorite, index) => (
+          {favorites.map((favorite) => (
             <Chip
-              key={index}
+              onClick={() => {
+                onLocationChange(favorite)
+              }}
+              key={favorite}
               label={favorite}
               color='warning'
               icon={<AiFillStar />}
-              onDelete={() => console.log(`${favorite} 삭제`)} // 삭제 이벤트
+              onDelete={() => {
+                onFavoriteChange(favorite)
+              }}
               deleteIcon={<AiFillDelete />}
             />
           ))}
