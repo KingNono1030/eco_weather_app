@@ -3,61 +3,11 @@ import Grid from '@mui/material/Grid2' // Grid2 사용
 import Image from 'next/image'
 
 import { WiStrongWind, WiHumidity, WiThermometer } from 'react-icons/wi'
+import { CurrentWeatherData } from '@/types/Weather.types'
+import { formatDate } from '@/lib/utils'
 
-type WeatherData = {
-  coord: { lon: number; lat: number }
-  weather: { id: number; main: string; description: string; icon: string }[]
-  main: {
-    temp: number
-    feels_like: number
-    temp_min: number
-    temp_max: number
-    pressure: number
-    humidity: number
-  }
-  wind: { speed: number; deg: number; gust?: number }
-  clouds: { all: number }
-  name: string
-  sys: { country: string }
-}
-
-const CurrentWeatherCard = () => {
-  const mockWeatherData: WeatherData = {
-    coord: {
-      lon: 127.0502,
-      lat: 37.6147,
-    },
-    weather: [
-      {
-        id: 800,
-        main: 'Clear',
-        description: '맑음',
-        icon: '01d',
-      },
-    ],
-    main: {
-      temp: 295.15,
-      feels_like: 293.25,
-      temp_min: 293.15,
-      temp_max: 297.15,
-      pressure: 1015,
-      humidity: 50,
-    },
-    wind: {
-      speed: 3.5,
-      deg: 270,
-      gust: 5.5,
-    },
-    clouds: {
-      all: 0,
-    },
-    name: 'Seoul',
-    sys: {
-      country: 'KR',
-    },
-  }
-
-  const { name, sys, weather, main, wind } = mockWeatherData
+const CurrentWeatherCard = ({ data }: { data: CurrentWeatherData }) => {
+  const { name, sys, weather, main, wind, dt } = data
 
   const temperatureC = (main.temp - 273.15).toFixed(1)
   const feelsLikeC = (main.feels_like - 273.15).toFixed(1)
@@ -69,6 +19,9 @@ const CurrentWeatherCard = () => {
       <CardContent>
         <Typography variant='h5' component='div' gutterBottom align='center'>
           {name}, {sys.country}
+        </Typography>
+        <Typography variant='h6' component='div' gutterBottom align='center'>
+          {formatDate(dt * 1000)}
         </Typography>
 
         <Box display='flex' justifyContent='center' alignItems='center' mb={2}>

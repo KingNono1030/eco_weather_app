@@ -8,34 +8,74 @@ import {
   getForecastWeatherData,
 } from '@/services/openWeatherMapService'
 import { Button } from '@mui/material'
-import { locationArray } from '@/constants/location'
-import { useState } from 'react'
+import {
+  DEFAULT_CITY,
+  locationArray,
+  locationCoordinatesMap,
+  City,
+} from '@/constants/location'
+import { useEffect, useState } from 'react'
 import WeatherLineChart from '@/components/weather/WeatherTabs'
 import CurrentWeatherCard from '@/components/weather/CurrentWeatherCard'
 import Favorites from '@/components/favorite'
+import { CurrentWeatherData } from '@/types/Weather.types'
 
 export default function Home() {
-  const [value, setValue] = useState<string | null>(null)
+  const [searchValue, setSearchValue] = useState<string | null>(DEFAULT_CITY)
+  const coordinates = locationCoordinatesMap[searchValue as City]
+  const [currentWeatherData, setCurrentWeatherData] =
+    useState<CurrentWeatherData | null>(null)
+  const [favorites, setFavorites] = useState<string[]>([])
+
+  useEffect(() => {
+    const fetchCurrentWeatherData = async () => {
+      try {
+        if (!coordinates) return
+        const weather: CurrentWeatherData =
+          await getCurrentWeatherData(coordinates)
+        console.log(weather)
+        setCurrentWeatherData(weather)
+      } catch (error) {
+        throw error
+      }
+    }
+    fetchCurrentWeatherData()
+  }, [coordinates])
 
   return (
     <div className='bg-gray-100 min-h-screen p-4'>
       <header className='flex justify-between items-center bg-white p-4 rounded shadow'>
         <h1 className='text-xl font-bold text-blue-600'>WeatherNow</h1>
-        <Autocomplete
-          sx={{ width: 300 }}
-          disablePortal
-          options={locationArray}
-          onChange={(_, newValue) => setValue(newValue)}
-          renderInput={(params) => <TextField {...params} label='도시' />}
-        />
-        <button className='text-yellow-500 font-bold'>★ 즐겨찾기</button>
+        <div className='flex gap-2'>
+          <Autocomplete
+            sx={{ width: 300 }}
+            disablePortal
+            options={locationArray}
+            onChange={(_, newValue) => setSearchValue(newValue)}
+            renderInput={(params) => <TextField {...params} label='도시' />}
+            value={searchValue}
+            defaultValue={DEFAULT_CITY}
+          />
+          <Button
+            variant='outlined'
+            onClick={() => {
+              console.log(searchValue)
+            }}
+          >
+            검색
+          </Button>
+        </div>
+        <button
+          onClick={() => {
+            console.log(searchValue)
+          }}
+          className='text-yellow-500 font-bold'
+        >
+          ★ 즐겨찾기
+        </button>
       </header>
-
       <section className='bg-white p-4 mt-4 rounded shadow flex'>
         <Favorites />
-      </section>
-
-      <section className='bg-white p-4 mt-4 rounded shadow'>
         <Button
           variant='contained'
           onClick={async () => {
@@ -58,16 +98,15 @@ export default function Home() {
         >
           버튼2
         </Button>
-        <CurrentWeatherCard />
-        <h2 className='text-lg font-semibold'>🌍 현재 위치: 서울 (12:00 PM)</h2>
-        <div className='flex items-center mt-2'>
-          <span className='text-4xl'>☀️</span>
-          <span className='text-2xl ml-2'>25°C</span>
-        </div>
       </section>
-
       <section className='bg-white p-4 mt-4 rounded shadow'>
-        <h2 className='text-lg font-semibold'>시간대별 날씨</h2>
+        <h2 className='text-lg font-semibold text-gray-600'>🌍 현재 날씨</h2>
+        {currentWeatherData && <CurrentWeatherCard data={currentWeatherData} />}
+      </section>
+      <section className='bg-white p-4 mt-4 rounded shadow'>
+        <h2 className='text-lg font-semibold text-gray-600'>
+          ⏰ 시간대별 날씨
+        </h2>
         <div className='flex space-x-4 mt-2'>
           <WeatherLineChart />
         </div>

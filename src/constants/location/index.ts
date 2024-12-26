@@ -176,5 +176,5 @@ export const locationCoordinatesMap: Record<City, GeolocationCoordinates> = {
   대전시: { latitude: 36.3506295013642, longitude: 127.384861613445 },
 }
 
-const DEFAULT_CITY = '서울시'
+export const DEFAULT_CITY = '서울시'
 export const DEFAULT_COORDINATES = locationCoordinatesMap[DEFAULT_CITY]

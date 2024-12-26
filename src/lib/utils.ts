@@ -10,3 +10,14 @@ export const getProcessedWeatherData = (
     windSpeed: weatherData.wind.speed,
   }))
 }
+
+export const formatDate = (dt: number): string => {
+  const date = new Date(dt)
+  const year = date.getFullYear()
+  const month = date.getMonth() + 1
+  const day = date.getDate()
+  const dayOfWeek = date.toLocaleDateString('ko-KR', { weekday: 'long' })
+  const hours = String(date.getHours()).padStart(2, '0')
+
+  return `${year}년 ${month}월 ${day}일, ${dayOfWeek} ${hours}시`
+}

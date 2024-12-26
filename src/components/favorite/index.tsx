@@ -5,7 +5,7 @@ const Favorites = () => {
   const favorites = ['제주도', '대전', '강릉']
 
   return (
-    <Card sx={{ maxWidth: 400, m: 'auto', borderRadius: 2, boxShadow: 3 }}>
+    <Card sx={{ maxWidth: 1200, m: 'auto', borderRadius: 2, boxShadow: 3 }}>
       <CardContent>
         <Typography variant='h6' gutterBottom>
           즐겨찾기
@@ -15,7 +15,7 @@ const Favorites = () => {
             <Chip
               key={index}
               label={favorite}
-              color='primary'
+              color='warning'
               icon={<AiFillStar />}
               onDelete={() => console.log(`${favorite} 삭제`)} // 삭제 이벤트
               deleteIcon={<AiFillDelete />}
