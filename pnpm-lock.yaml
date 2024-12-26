@@ -7,6 +7,9 @@ settings:
 importers:
   .:
     dependencies:
+      ky:
+        specifier: ^1.7.4
+        version: 1.7.4
       next:
         specifier: 15.1.2
         version: 15.1.2(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -1851,6 +1854,13 @@ packages:
       {
         integrity: sha512-oxVHkHR/EJf2CNXnWxRLW6mg7JyCCUcG0DtEGmL2ctUo1PNTin1PUil+r/+4r5MpVgC/fn1kjsx7mjSujKqIpw==,
       }
+
+  ky@1.7.4:
+    resolution:
+      {
+        integrity: sha512-zYEr/gh7uLW2l4su11bmQ2M9xLgQLjyvx58UyNM/6nuqyWFHPX5ktMjvpev3F8QWdjSsHUpnWew4PBCswBNuMQ==,
+      }
+    engines: { node: '>=18' }
 
   language-subtag-registry@0.3.23:
     resolution:
@@ -4043,6 +4053,8 @@ snapshots:
   keyv@4.5.4:
     dependencies:
       json-buffer: 3.0.1
+
+  ky@1.7.4: {}
 
   language-subtag-registry@0.3.23: {}
 
