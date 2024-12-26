@@ -45,7 +45,6 @@ const CurrentWeatherCard = ({ data }: { data: CurrentWeatherData }) => {
 
         <Grid container spacing={2} mt={2} sx={{ justifyContent: 'center' }}>
           <Grid
-            xs={4}
             sx={{
               display: 'flex',
               flexDirection: 'column',
@@ -61,7 +60,6 @@ const CurrentWeatherCard = ({ data }: { data: CurrentWeatherData }) => {
             </Typography>
           </Grid>
           <Grid
-            xs={4}
             sx={{
               display: 'flex',
               flexDirection: 'column',
@@ -72,7 +70,6 @@ const CurrentWeatherCard = ({ data }: { data: CurrentWeatherData }) => {
             <Typography variant='body2'>습도: {main.humidity}%</Typography>
           </Grid>
           <Grid
-            xs={4}
             sx={{
               display: 'flex',
               flexDirection: 'column',
