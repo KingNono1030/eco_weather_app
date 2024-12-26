@@ -19,7 +19,7 @@ import WeatherLineChart from '@/components/weather/WeatherTabs'
 import CurrentWeatherCard from '@/components/weather/CurrentWeatherCard'
 import Favorites from '@/components/favorite'
 import { CurrentWeatherData, ForecastWeatherData } from '@/types/Weather.types'
-
+import { GeolocationCoordinates } from '@/types/Location.types'
 export default function Home() {
   const [searchValue, setSearchValue] = useState<string | null>(DEFAULT_CITY)
   const [location, setLocation] = useState<string | null>(DEFAULT_CITY)
@@ -46,6 +46,21 @@ export default function Home() {
       localStorage.setItem('favorites', JSON.stringify(updatedFavorites))
       return updatedFavorites
     })
+  }
+
+  const getCurrentLocationWeather = async () => {
+    try {
+      const currentLocation: GeolocationCoordinates = await getGeoLocation()
+      const [currentWeather, forecastWeather] = await Promise.all([
+        getCurrentWeatherData(currentLocation),
+        getForecastWeatherData(currentLocation),
+      ])
+
+      setCurrentWeatherData(currentWeather)
+      setForecastWeatherData(forecastWeather)
+    } catch (error) {
+      console.error('현재 위치 날씨 데이터 가져오는데 실패 :', error)
+    }
   }
 
   useEffect(() => {
@@ -108,14 +123,22 @@ export default function Home() {
             검색
           </Button>
         </div>
-        <button
-          onClick={() => {
-            addFavorite(location)
-          }}
-          className='text-yellow-500 font-bold'
-        >
-          ★ 즐겨찾기
-        </button>
+        <div className='flex gap-3'>
+          <button
+            onClick={getCurrentLocationWeather}
+            className='text-green-500 font-bold'
+          >
+            📍 현재 위치 검색
+          </button>
+          <button
+            onClick={() => {
+              addFavorite(location)
+            }}
+            className='text-yellow-500 font-bold'
+          >
+            ★ 즐겨찾기
+          </button>
+        </div>
       </header>
       <section className='bg-white p-4 mt-4 rounded shadow'>
         <h2 className='text-lg font-semibold text-gray-600 mb-2'>
