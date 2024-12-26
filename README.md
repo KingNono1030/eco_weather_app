@@ -70,7 +70,7 @@ pnpm dev
 - 브라우저에서 http://localhost:3000 열기.
 
 ### 🌐 배포 링크
-- URL: https://eco-weather.vercel.app
+- URL: [https://eco-weather.vercel.app](https://eco-weather-now.netlify.app/)
 
 ## 🔧 사용된 기술
 
@@ -79,23 +79,66 @@ pnpm dev
 - **Next.js**: 페이지 기반 라우팅 및 이미지 최적화 지원.
 - **TypeScript**: 안정적인 타입 시스템을 적용하여 유지보수성 강화.
 
+### 📡 **HTTP 클라이언트**
+- **Ky**:
+  - 가볍고 현대적인 HTTP 클라이언트 라이브러리.
+  - OpenWeatherMap API와 통신할 때 사용.
+  - `fetch`를 기반으로 추가적인 편의 기능 제공 (자동 재시도, JSON 파싱 등).
+  - 예제:
+    ```ts
+    import ky from 'ky'
+    import { WEATHER_MAP_BASE_URL } from '@/constants/api/weatherApi'
+    import { API_ROUTE_BASE_URL } from '@/constants/api'
+    
+    export const weatherKy = ky.create({
+      prefixUrl: WEATHER_MAP_BASE_URL,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      timeout: 10000,
+      hooks: {
+        beforeRequest: [
+          (request) => {
+            console.log('Request URL:', request.url)
+          },
+        ],
+        afterResponse: [
+          async (request, options, response) => {
+            if (!response.ok) {
+              console.error('Response error:', response.status)
+            }
+          },
+        ],
+      },
+    })
+    
+    export const apiRouteKy = ky.create({
+      prefixUrl: API_ROUTE_BASE_URL,
+    })
+
+    ```
 ### 🎨 **스타일링**
 - **Tailwind CSS**: 유틸리티 기반의 CSS 프레임워크로, 직관적이고 빠른 UI 스타일링.
-- **mui**: UI 컴포넌트 제공
+- **Material-UI (MUI)**:
+  - React 기반의 UI 컴포넌트 라이브러리.
+  - 프로젝트에서 다음과 같은 컴포넌트를 활용:
+    - **Autocomplete**: 도시 검색 기능 구현.
+    - **Card**: 현재 날씨와 즐겨찾기 리스트 표시.
+    - **Grid**: 반응형 레이아웃 구성.
+  - 예제:
+    ```tsx
+    import { Card, CardContent, TextField, Autocomplete } from '@mui/material';
 
-### **OpenWeatherMap API**
-- **현재 날씨 데이터**:
-  - 사용된 엔드포인트: `/data/2.5/weather`
-  - 주요 데이터:
-    - 현재 온도
-    - 체감 온도
-    - 습도, 풍속, 기압 등
-- **시간대별 예보 데이터**:
-  - 사용된 엔드포인트: `/data/2.5/forecast`
-  - 주요 데이터:
-    - 3시간 간격 예보
-    - 날씨 상태 (맑음, 흐림, 비, 눈 등)
-
+          <Autocomplete
+            sx={{ width: 300 }}
+            disablePortal
+            options={locationArray}
+            onChange={(_, newValue) => setSearchValue(newValue)}
+            renderInput={(params) => <TextField {...params} label='도시' />}
+            value={searchValue}
+            defaultValue={DEFAULT_CITY}
+          />
+    ```
 ## ✨ 구현 상세
 
 ### 현재 날씨 정보
@@ -103,6 +146,9 @@ pnpm dev
 - 주요 데이터: 현재 온도, 체감 온도, 최저/최고 온도, 풍속, 습도.
 
 https://github.com/user-attachments/assets/2ba720a7-add1-48af-b835-908bb797d506
+
+![image](https://github.com/user-attachments/assets/f279e4da-c0d9-43c0-9c09-571c0c35448f)
+- 클라이언트에서 OpenWeatherMap API 요청 보낼 시 cors 에러 반환되어 api route 로 요청을 우회하여 보냄
 
 ### 시간대별 예보
 - OpenWeatherMap API에서 시간대별 예보 데이터를 가져와 3시간 단위로 차트에 렌더링합니다.
@@ -117,6 +163,8 @@ https://github.com/user-attachments/assets/dd0881fa-8521-484f-be80-a0bbcf914309
 
 ### 현재 위치 동기화
 - navigator.geolocation 을 사용하여 현재 위치 데이터 조회
+
+https://github.com/user-attachments/assets/13d63ee5-ed0b-4b49-aafb-0ddc6fc5856f
 
 ## 📊 사용된 API
 
