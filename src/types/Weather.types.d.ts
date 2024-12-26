@@ -67,3 +67,10 @@ export type CurrentWeatherData = {
   name: string
   cod: number
 }
+
+export type GetForecastWeatherDataResponse = {
+  cod: '200'
+  message: 0
+  cnt: 40
+  list: ForecastWeatherData[]
+}

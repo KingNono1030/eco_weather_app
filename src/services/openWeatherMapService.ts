@@ -1,5 +1,6 @@
 import { apiRouteKy } from '@/lib/kyInstance'
 import { GeolocationCoordinates } from '@/types/Location.types'
+import { GetForecastWeatherDataResponse } from '@/types/Weather.types'
 
 export const getCurrentWeatherData = async ({
   latitude,
@@ -21,7 +22,7 @@ export const getForecastWeatherData = async ({
   latitude,
   longitude,
 }: GeolocationCoordinates) => {
-  const response = await apiRouteKy
+  const response: GetForecastWeatherDataResponse = await apiRouteKy
     .get(`api/forecastWeather`, {
       searchParams: {
         lat: latitude,
@@ -29,6 +30,6 @@ export const getForecastWeatherData = async ({
       },
     })
     .json()
-
-  return response
+  const { list } = response
+  return list
 }
